@@ -13,8 +13,8 @@ from langchain_core.language_models import BaseChatModel
 
 class Settings(BaseSettings):
     # ── LLM ──────────────────────────────────────────────────────────────────
-    groq_api_key: str = "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"
-    google_api_key: str = "AIzaSyDCP_CKWfDw_V2i6efI3g8jOSsCieJ5CLc"
+    groq_api_key: str = ""
+    google_api_key: str = ""
 
     groq_model: str = "llama-3.3-70b-versatile"
     gemini_model: str = "gemini-1.5-flash"
