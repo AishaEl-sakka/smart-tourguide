@@ -61,6 +61,11 @@ def planner_node(state: PlanState) -> PlanState:
     ]
 
     try:
+        print("\nAVAILABLE HOTELS:")
+        print(ctx["available_hotels"])
+
+        print("\nAVAILABLE ACTIVITIES:")
+        print(ctx["available_activities"][:5])
         response = llm.invoke(messages)
         raw = response.content.strip()
 

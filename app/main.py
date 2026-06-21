@@ -9,7 +9,9 @@ Endpoints:
 from __future__ import annotations
 import logging
 from contextlib import asynccontextmanager
+from logging import config, error
 from typing import Any
+from unittest import result
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -151,20 +153,41 @@ async def plan(request: Request, body: PlanRequest):
     }
 
     try:
-        result = plan_graph.invoke(state_in, config=config)
-    except Exception as e:
-        logger.error("Plan graph error: %s", e)
-        raise HTTPException(status_code=500, detail=str(e))
+        result = await plan_graph.ainvoke(
+            state_in,
+            config=config,
+)
 
+    except Exception as e:
+        import traceback
+
+        print("\n" + "=" * 80)
+        print("PLAN GRAPH ERROR")
+        traceback.print_exc()
+        print("=" * 80 + "\n")
+
+        logger.exception("Plan graph error")
+
+        raise HTTPException(
+        status_code=500,
+        detail=str(e),
+        )
     # ── Determine response type ───────────────────────────────────────────────
     missing = result.get("missing_fields", [])
     question = result.get("collector_question", "")
     plan_json = result.get("plan_json")
     error = result.get("error")
 
-    if error:
-        raise HTTPException(status_code=500, detail=error)
+    print("\nRESULT KEYS:", result.keys())
+    print("PLAN ERROR:", error)
+    print("PLAN JSON EXISTS:", bool(result.get("plan_json")))
+    print()
 
+    if error:
+        raise HTTPException(
+            status_code=500,
+            detail=error
+        )
     if plan_json:
         eval_result = evaluate_plan(plan_json)
         return PlanCompleteResponse(

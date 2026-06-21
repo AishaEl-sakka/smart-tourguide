@@ -35,12 +35,12 @@ class ParallelData(TypedDict, total=False):
 class PlanState(TypedDict, total=False):
     # Input
     session_id: str
-    messages: list[dict]         # full conversation history
+    messages: list[dict]
 
     # Collector stage
     constraints: TripConstraints
     missing_fields: list[str]
-    collector_question: str      # question to send back to user
+    collector_question: str
 
     # Validation stage
     budget_validation: BudgetValidation
@@ -48,6 +48,9 @@ class PlanState(TypedDict, total=False):
     # Parallel data stage
     parallel_data: ParallelData
 
+    # Aggregator stage
+    aggregated_context: dict
+
     # Output stage
-    plan_json: dict              # final structured itinerary
+    plan_json: dict
     error: Optional[str]
